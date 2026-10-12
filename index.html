@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>日本旅遊小幫手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 模擬手機外框 */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: #f8fafc; /* bg-slate-50 */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 隱藏滾動條但保留滾動功能 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 點擊特效 */
+        .active-scale:active {
+            transform: scale(0.97);
+            transition: transform 0.1s;
+        }
+
+        /* 播放動畫 */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        .playing-icon {
+            position: relative;
+            color: #ef4444; /* red-500 */
+        }
+        .playing-icon::after {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            background-color: #ef4444;
+            animation: pulse-ring 1s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            z-index: -1;
+        }
+
+        /* 漢字注音 (Furigana) 樣式 */
+        ruby {
+            ruby-align: center;
+        }
+        rt {
+            font-size: 0.55em;
+            color: #e11d48; /* 改為更具質感的玫瑰紅 (rose-600) */
+            font-weight: 600;
+            transform: translateY(-1px);
+        }
+
+        /* 介面進場動畫 */
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* 初始隱藏，靠動畫顯示 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Header (升級漸層質感與更強的陰影) -->
+        <header class="bg-gradient-to-r from-red-500 to-rose-600 text-white sticky top-0 z-20 shadow-lg">
+            <div class="px-4 py-4 flex items-center justify-between h-16">
+                <button id="backBtn" class="text-white text-xl p-2 hidden active-scale transition-opacity" onclick="goBack()">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <h1 id="headerTitle" class="text-xl font-bold font-sans flex-1 text-center">日本旅遊小幫手 🇯🇵</h1>
+                <div class="w-8"></div> <!-- 佔位，讓標題置中 -->
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="mainContent" class="flex-1 overflow-y-auto hide-scrollbar p-4 pb-10">
+            
+            <!-- 場景分類頁面 (預設顯示) -->
+            <div id="homeView">
+                <div class="mb-3">
+                    <p class="text-gray-600 text-xs mb-1">點擊場景，尋找需要的日語對話：</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2.5" id="categoryGrid">
+                    <!-- 分類卡片將由 JS 動態生成 -->
+                </div>
+                
+                <div class="mt-4 bg-blue-50 p-3 rounded-xl border border-blue-100">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-lightbulb text-blue-500 mt-0.5 mr-2 text-base"></i>
+                        <div>
+                            <h3 class="font-bold text-blue-800 text-xs mb-0.5">使用提示</h3>
+                            <p class="text-blue-600 text-[0.65rem] leading-relaxed">
+                                點擊喇叭圖示即可播放發音。建議調高音量，或直接展示給對方看。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 對話列表頁面 (預設隱藏) -->
+            <div id="phraseView" class="hidden">
+                <div id="phraseList" class="flex flex-col gap-3">
+                    <!-- 句子卡片將由 JS 動態生成 -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // 對話資料庫 (按實際發生順序排列，並新增便利商店情境)
+        const appData = {
+            basics: {
+                id: 'basics', title: "基本用語", icon: "fa-regular fa-handshake", color: "bg-orange-500",
+                phrases: [
+                    { zh: "早安", ruby: "<ruby>お早<rt>はや</rt></ruby>うございます", ja: "おはようございます", romaji: "Ohayou gozaimasu" },
+                    { zh: "你好", ruby: "こんにちは", ja: "こんにちは", romaji: "Konnichiwa" },
+                    { zh: "不好意思 / 請問 / 借過 (最萬用的起手式)", ruby: "すみません", ja: "すみません", romaji: "Sumimasen" },
+                    { zh: "拜託您了 / 麻煩了 (提出要求時用)", ruby: "お<ruby>願<rt>ねが</rt></ruby>いします", ja: "お願いします", romaji: "Onegaishimasu", intent: "positive" },
+                    { zh: "請稍等一下", ruby: "<ruby>少々<rt>しょうしょう</rt></ruby>お<ruby>待<rt>ま</rt></ruby>ちください", ja: "少々お待ちください", romaji: "Shoushou omachi kudasai" },
+                    { zh: "是的 / 好", ruby: "はい", ja: "はい", romaji: "Hai", intent: "positive" },
+                    { zh: "不是 / 不", ruby: "いいえ", ja: "いいえ", romaji: "Iie", intent: "negative" },
+                    { zh: "沒關係 / 不用了 (婉拒時用)", ruby: "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です", ja: "大丈夫です", romaji: "Daijoubu desu", intent: "negative" },
+                    { zh: "謝謝", ruby: "ありがとうございます", ja: "ありがとうございます", romaji: "Arigatou gozaimasu" },
+                    { zh: "辛苦了 (對服務人員表示感謝)", ruby: "お<ruby>疲<rt>つか</rt></ruby>れ<ruby>様<rt>さま</rt></ruby>です", ja: "お疲れ様です", romaji: "Otsukaresama desu" }
+                ]
+            },
+            convenience_store: {
+                id: 'convenience_store', title: "便利商店", icon: "fa-solid fa-store", color: "bg-green-500",
+                phrases: [
+                    { 
+                        situation: "結帳時，店員詢問是否需要塑膠袋",
+                        clerk: { ja: "レジ袋はご利用になりますか？", ruby: "レジ<ruby>袋<rt>ぶくろ</rt></ruby>はご<ruby>利用<rt>りよう</rt></ruby>になりますか？", zh: "請問需要塑膠袋嗎？" },
+                        zh: "請給我塑膠袋", ruby: "レジ<ruby>袋<rt>ぶくろ</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "レジ袋をお願いします", romaji: "Rejibukuro o onegaishimasu",
+                        isReply: true, intent: "positive"
+                    },
+                    { zh: "不用袋子", ruby: "<ruby>袋<rt>ふくろ</rt></ruby>はいりません", ja: "袋はいりません", romaji: "Fukuro wa irimasen", isReply: true, intent: "negative" },
+                    { zh: "不用了 / 沒關係 (婉拒)", ruby: "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です", ja: "大丈夫です", romaji: "Daijoubu desu", isReply: true, intent: "negative" },
+                    { 
+                        situation: "買便當時，店員詢問是否加熱",
+                        clerk: { ja: "お弁当温めますか？", ruby: "お<ruby>弁当<rt>べんとう</rt></ruby><ruby>温<rt>あたた</rt></ruby>めますか？", zh: "便當要加熱嗎？" },
+                        zh: "請幫我加熱", ruby: "<ruby>温<rt>あたため</rt></ruby>めてください", ja: "温めてください", romaji: "Atatamete kudasai",
+                        isReply: true, intent: "positive"
+                    },
+                    { zh: "不用加熱", ruby: "<ruby>温<rt>あたため</rt></ruby>めなくていいです", ja: "温めなくていいです", romaji: "Atatamenakute ii desu", isReply: true, intent: "negative" },
+                    { 
+                        situation: "買餐點時，店員詢問餐具",
+                        clerk: { ja: "お箸はおつけしますか？", ruby: "お<ruby>箸<rt>はし</rt></ruby>はおつけしますか？", zh: "需要附上筷子嗎？" },
+                        zh: "請給我筷子", ruby: "お<ruby>箸<rt>はし</rt></ruby>をください", ja: "お箸をください", romaji: "Ohashi o kudasai",
+                        isReply: true, intent: "positive"
+                    },
+                    { zh: "請給我湯匙 / 叉子", ruby: "スプーン / フォーク をください", ja: "スプーン / フォーク をください", romaji: "Supūn / fōku o kudasai", isReply: true, intent: "positive" },
+                    { zh: "請給我吸管", ruby: "ストローをください", ja: "ストローをください", romaji: "Sutorō o kudasai", isReply: true, intent: "positive" },
+                    { zh: "請給我一杯熱咖啡 / 冰咖啡 (櫃台點餐)", ruby: "ホットコーヒー / アイスコーヒー をください", ja: "ホットコーヒー / アイスコーヒー をください", romaji: "Hotto kōhī / Aisu kōhī o kudasai" },
+                    { 
+                        situation: "結帳付款時",
+                        clerk: { ja: "お支払い方法は？", ruby: "お<ruby>支払<rt>しはら</rt></ruby>い<ruby>方法<rt>ほうほう</rt></ruby>は？", zh: "請問付款方式是？" },
+                        zh: "我要用西瓜卡 (IC卡) 結帳", ruby: "Suica（スイカ）で<ruby>払<rt>はら</rt></ruby>います", ja: "Suicaで払います", romaji: "Suika de haraimasu", isReply: true
+                    },
+                    { 
+                        situation: "買菸酒時，店員要求確認年齡",
+                        clerk: { ja: "画面のボタンをタッチしてください", ruby: "<ruby>画面<rt>がめん</rt></ruby>のボタンをタッチしてください", zh: "請點擊螢幕上的確認按鈕" },
+                        zh: "是的，我已滿20歲", ruby: "はい、20<ruby>歳以上<rt>さいいじょう</rt></ruby>です", ja: "はい、20歳以上です", romaji: "Hai, hatachi ijō desu", isReply: true, intent: "positive"
+                    }
+                ]
+            },
+            accommodation: {
+                id: 'accommodation', title: "住宿飯店", icon: "fa-solid fa-bed", color: "bg-indigo-500",
+                phrases: [
+                    { zh: "我要辦理入住", ruby: "チェックインをお<ruby>願<rt>ねが</rt></ruby>いします", ja: "チェックインをお願いします", romaji: "Chekkuin o onegaishimasu" },
+                    { zh: "我有預約", ruby: "<ruby>予約<rt>よやく</rt></ruby>してあります", ja: "予約してあります", romaji: "Yoyaku shite arimasu" },
+                    { zh: "可以先寄放行李嗎？(入住前)", ruby: "<ruby>荷物<rt>にもつ</rt></ruby>を<ruby>預<rt>あず</rt></ruby>かってもらえますか？", ja: "荷物を預かってもらえますか？", romaji: "Nimotsu o azukatte moraemasu ka?" },
+                    { zh: "早餐是幾點開始？", ruby: "<ruby>朝食<rt>ちょうしょく</rt></ruby>は<ruby>何時<rt>なんじ</rt></ruby>からですか？", ja: "朝食は何時からですか？", romaji: "Chōshoku wa nanji kara desu ka?" },
+                    { zh: "Wi-Fi密碼是多少？", ruby: "Wi-Fiのパスワードは<ruby>何<rt>なん</rt></ruby>ですか？", ja: "Wi-Fiのパスワードは何ですか？", romaji: "Wai-fai no pasuwādo wa nan desu ka?" },
+                    { zh: "可以給我多一條毛巾嗎？", ruby: "タオルをもう1<ruby>枚<rt>まい</rt></ruby>もらえますか？", ja: "タオルをもう1枚もらえますか？", romaji: "Taoru o mō ichimai moraemasu ka?" },
+                    { zh: "請幫我打掃房間", ruby: "<ruby>部屋<rt>へや</rt></ruby>の<ruby>掃除<rt>そうじ</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "部屋の掃除をお願いします", romaji: "Heya no sōji o onegaishimasu" },
+                    { zh: "我的房卡忘在房間裡了", ruby: "カードキーを<ruby>部屋<rt>へや</rt></ruby>に<ruby>忘<rt>わす</rt></ruby>れました", ja: "カードキーを部屋に忘れました", romaji: "Kādokī o heya ni wasuremashita" },
+                    { zh: "房間沒有熱水", ruby: "<ruby>部屋<rt>へや</rt></ruby>のお<ruby>湯<rt>ゆ</rt></ruby>が<ruby>出<rt>で</rt></ruby>ません", ja: "部屋のお湯が出ません", romaji: "Heya no oyu ga demasen", intent: "negative" },
+                    { zh: "冷氣/暖氣壞了", ruby: "エアコンが<ruby>壊<rt>こわ</rt></ruby>れています", ja: "エアコンが壊れています", romaji: "Eakon ga kowarete imasu", intent: "negative" },
+                    { zh: "請幫我叫計程車", ruby: "タクシーを<ruby>呼<rt>よ</rt></ruby>んでください", ja: "タクシーを呼んでください", romaji: "Takushī o yonde kudasai" },
+                    { zh: "請問可以延遲退房嗎？", ruby: "レイトチェックアウトはできますか？", ja: "レイトチェックアウトはできますか？", romaji: "Reito chekkuauto wa dekimasu ka?" },
+                    { zh: "我要辦理退房", ruby: "チェックアウトをお<ruby>願<rt>ねが</rt></ruby>いします", ja: "チェックアウトをお願いします", romaji: "Chekkuauto o onegaishimasu" }
+                ]
+            },
+            dining: {
+                id: 'dining', title: "餐廳美食", icon: "fa-solid fa-utensils", color: "bg-rose-500",
+                phrases: [
+                    { 
+                        situation: "剛進入餐廳時",
+                        clerk: { ja: "何名様ですか？", ruby: "<ruby>何名様<rt>なんめいさま</rt></ruby>ですか？", zh: "請問幾位？" },
+                        zh: "1人 / 2人 / 3人 / 4人", ruby: "1<ruby>人<rt>ひとり</rt></ruby> / 2<ruby>人<rt>ふたり</rt></ruby> / 3<ruby>人<rt>さんにん</rt></ruby> / 4<ruby>人<rt>よにん</rt></ruby>", ja: "ひとり ふたり さんにん よにん", romaji: "Hitori / Futari / Sannin / Yonin",
+                        isReply: true, intent: "neutral"
+                    },
+                    { zh: "有英文/中文菜單嗎？", ruby: "<ruby>英語<rt>えいご</rt></ruby> / <ruby>中国語<rt>ちゅうごくご</rt></ruby> のメニューはありますか？", ja: "英語 / 中国語 のメニューはありますか？", romaji: "Eigo / Chūgokugo no menyū wa arimasu ka?" },
+                    { zh: "有什麼推薦的嗎？", ruby: "おすすめはどれですか？", ja: "おすすめはどれですか？", romaji: "Osusume wa dore desu ka?" },
+                    { 
+                        situation: "看菜單準備點餐時",
+                        clerk: { ja: "ご注文はお決まりですか？", ruby: "ご<ruby>注文<rt>ちゅうもん</rt></ruby>はお<ruby>決<rt>き</rt></ruby>まりですか？", zh: "決定好要點什麼了嗎？" },
+                        zh: "請給我這個 (指著菜單)", ruby: "これをください", ja: "これをください", romaji: "Kore o kudasai",
+                        isReply: true, intent: "positive"
+                    },
+                    { zh: "我不吃肉/海鮮", ruby: "<ruby>肉<rt>にく</rt></ruby> / <ruby>魚介類<rt>ぎょかいるい</rt></ruby> は<ruby>食<rt>た</rt></ruby>べられません", ja: "肉 / 魚介類 は食べられません", romaji: "Niku / Gyokairui wa taberaremasen", intent: "negative" },
+                    { zh: "請給我水", ruby: "お<ruby>水<rt>みず</rt></ruby>をください", ja: "お水をください", romaji: "Omizu o kudasai" },
+                    { zh: "太好吃了", ruby: "とても<ruby>美味<rt>おい</rt></ruby>しいです", ja: "とても美味しいです", romaji: "Totemo oishii desu", intent: "positive" },
+                    { zh: "麻煩結帳", ruby: "お<ruby>会計<rt>かいけい</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "お会計をお願いします", romaji: "Okaikei o onegaishimasu" },
+                    { zh: "可以分開結帳嗎？", ruby: "<ruby>別々<rt>べつべつ</rt></ruby>でお<ruby>願<rt>ねが</rt></ruby>いします", ja: "別々でお願いします", romaji: "Betsubetsu de onegaishimasu" }
+                ]
+            },
+            shopping: {
+                id: 'shopping', title: "購物血拼", icon: "fa-solid fa-bag-shopping", color: "bg-pink-500",
+                phrases: [
+                    { zh: "請問更衣室在哪裡？", ruby: "<ruby>試着室<rt>しちゃくしつ</rt></ruby>はどこですか？", ja: "試着室はどこですか？", romaji: "Shichakushitsu wa doko desu ka?" },
+                    { zh: "請問可以試穿嗎？", ruby: "<ruby>試着<rt>しちゃく</rt></ruby>してもいいですか？", ja: "試着してもいいですか？", romaji: "Shichaku shite mo ii desu ka?" },
+                    { zh: "請問有 S / M / L 尺寸嗎？", ruby: "S / M / L サイズはありますか？", ja: "S / M / L サイズはありますか？", romaji: "Esu / Emu / Eru saizu wa arimasu ka?" },
+                    { zh: "我可以拿大一點/小一點的尺寸嗎？", ruby: "もう<ruby>少<rt>すこ</rt></ruby>し<ruby>大<rt>おお</rt></ruby>きい（<ruby>小<rt>ちい</rt></ruby>さい）サイズはありますか？", ja: "もう少し大きい（小さい）サイズはありますか？", romaji: "Mō sukoshi ōkii (chiisai) saizu wa arimasu ka?" },
+                    { zh: "有其他顏色嗎？", ruby: "<ruby>色違<rt>いろちが</rt></ruby>いはありますか？", ja: "色違いはありますか？", romaji: "Irochigai wa arimasu ka?" },
+                    { zh: "有全新的嗎？", ruby: "<ruby>新<rt>あたら</rt></ruby>しいものはありますか？", ja: "新しいものはありますか？", romaji: "Atarashii mono wa arimasu ka?" },
+                    { zh: "這個多少錢？", ruby: "これはいくらですか？", ja: "これはいくらですか？", romaji: "Kore wa ikura desu ka?" },
+                    { 
+                        situation: "購買指定數量時",
+                        zh: "這個我要 1個 / 2個 / 3個", 
+                        ruby: "これを 1つ (ひとつ) / 2つ (ふたつ) / 3つ (みっつ) ください", 
+                        ja: "これをひとつ、ふたつ、みっつください", 
+                        romaji: "Kore o hitotsu / futatsu / mittsu kudasai" 
+                    },
+                    { zh: "我要買這個當作禮物", ruby: "これをプレゼント<ruby>用<rt>よう</rt></ruby>にしてください", ja: "これをプレゼント用にしてください", romaji: "Kore o purezento yō ni shite kudasai" },
+                    { zh: "請幫我分開包裝", ruby: "<ruby>別々<rt>べつべつ</rt></ruby>に<ruby>包<rt>つつ</rt></ruby>んでください", ja: "別々に包んでください", romaji: "Betsubetsu ni tsutsunde kudasai" },
+                    { zh: "不用袋子", ruby: "<ruby>袋<rt>ふくろ</rt></ruby>はいりません", ja: "袋はいりません", romaji: "Fukuro wa irimasen", intent: "negative" },
+                    { zh: "可以使用信用卡嗎？", ruby: "クレジットカードは<ruby>使<rt>つか</rt></ruby>えますか？", ja: "クレジットカードは使えますか？", romaji: "Kurejitto kādo wa tsukaemasu ka?" },
+                    { 
+                        situation: "關於免稅 (Tax Free)",
+                        zh: "請問可以免稅嗎？", ruby: "<ruby>免税<rt>めんぜい</rt></ruby>できますか？", ja: "免税できますか？", romaji: "Menzei dekimasu ka?" 
+                    },
+                    { zh: "免稅需要達到多少金額？", ruby: "いくらから<ruby>免税<rt>めんぜい</rt></ruby>になりますか？", ja: "いくらから免税になりますか？", romaji: "Ikura kara menzei ni narimasu ka?" },
+                    { zh: "請問免稅櫃台在哪裡？", ruby: "<ruby>免税<rt>めんぜい</rt></ruby>カウンターはどこですか？", ja: "免税カウンターはどこですか？", romaji: "Menzei kauntā wa doko desu ka?" }
+                ]
+            },
+            pop_culture: {
+                id: 'pop_culture', title: "動漫與收藏", icon: "fa-solid fa-gamepad", color: "bg-purple-500",
+                phrases: [
+                    { 
+                        situation: "收集渠蓋卡 (マンホールカード)",
+                        zh: "不好意思，請給我渠蓋卡！", ruby: "すみません、マンホールカード、お<ruby>願<rt>ねが</rt></ruby>いします！", ja: "すみません、マンホールカード、お願いします！", romaji: "Sumimasen, manhōru kādo, onegaishimasu!", intent: "positive"
+                    },
+                    { 
+                        situation: "抽一番賞 (一番くじ)",
+                        zh: "請問有這個一番賞嗎？", ruby: "すみません、この<ruby>一番<rt>いちばん</rt></ruby>くじはありますか？", ja: "すみません、この一番くじはありますか？", romaji: "Sumimasen, kono ichiban kuji wa arimasu ka?" 
+                    },
+                    { 
+                        zh: "我要抽 3 次", ruby: "3<ruby>回<rt>かい</rt></ruby>お<ruby>願<rt>ねが</rt></ruby>いします", ja: "3回お願いします", romaji: "Sankai onegaishimasu", intent: "positive"
+                    },
+                    { 
+                        situation: "寶可夢中心 (Pokémon Center)",
+                        zh: "請問有寶可夢卡牌嗎？", ruby: "ポケモンカードはありますか？", ja: "ポケモンカードはありますか？", romaji: "Pokemon kādo wa arimasu ka?" 
+                    },
+                    { 
+                        zh: "請問有徽章 (Pin) 嗎？", ruby: "ピンズ（ピンバッジ）はありますか？", ja: "ピンズ（ピンバッジ）はありますか？", romaji: "Pinzu (Pinbajji) wa arimasu ka?" 
+                    },
+                    { 
+                        zh: "請問有這個公仔嗎？ (可指著照片)", ruby: "このぬいぐるみはありますか？", ja: "このぬいぐるみはありますか？", romaji: "Kono nuigurumi wa arimasu ka?" 
+                    }
+                ]
+            },
+            transport: {
+                id: 'transport', title: "交通指引", icon: "fa-solid fa-train-subway", color: "bg-blue-500",
+                phrases: [
+                    { zh: "我想去〇〇", ruby: "〇〇へ<ruby>行<rt>い</rt></ruby>きたいです", ja: "〇〇へ行きたいです", romaji: "〇〇 e ikitai desu" },
+                    { zh: "我要買到〇〇的車票", ruby: "〇〇までの<ruby>切符<rt>きっぷ</rt></ruby>をください", ja: "〇〇までの切符をください", romaji: "〇〇 made no kippu o kudasai" },
+                    { zh: "我要儲值交通卡 (IC卡)", ruby: "ICカードにチャージしたいです", ja: "ICカードにチャージしたいです", romaji: "IC ka-do ni cha-ji shitai desu" },
+                    { zh: "這班車會到〇〇嗎？", ruby: "この<ruby>電車<rt>でんしゃ</rt></ruby>は〇〇に<ruby>行<rt>い</rt></ruby>きますか？", ja: "この電車は〇〇に行きますか？", romaji: "Kono densha wa 〇〇 ni ikimasu ka?" },
+                    { zh: "在哪裡換車？", ruby: "どこで<ruby>乗<rt>の</rt></ruby>り<ruby>換<rt>か</rt></ruby>えですか？", ja: "どこで乗り換えですか？", romaji: "Doko de norikae desu ka?" },
+                    { zh: "下一站是哪裡？", ruby: "<ruby>次<rt>つぎ</rt></ruby>の<ruby>駅<rt>えき</rt></ruby>はどこですか？", ja: "次の駅はどこですか？", romaji: "Tsugi no eki wa doko desu ka?" },
+                    { zh: "我要下車 (公車/計程車)", ruby: "<ruby>降<rt>お</rt></ruby>ります", ja: "降ります", romaji: "Orimasu" },
+                    { zh: "請載我到這裡 (給計程車司機)", ruby: "ここまでお<ruby>願<rt>ねが</rt></ruby>いします", ja: "ここまでお願いします", romaji: "Koko made onegaishimasu" }
+                ]
+            },
+            directions: {
+                id: 'directions', title: "問路與地標", icon: "fa-solid fa-map-location-dot", color: "bg-emerald-500",
+                phrases: [
+                    { zh: "請問〇〇在哪裡？", ruby: "〇〇はどこですか？", ja: "〇〇はどこですか？", romaji: "〇〇 wa doko desu ka?" },
+                    { zh: "這附近有便利商店嗎？", ruby: "この<ruby>近<rt>ちか</rt></ruby>くにコンビニはありますか？", ja: "この近くにコンビニはありますか？", romaji: "Kono chikaku ni konbini wa arimasu ka?" },
+                    { zh: "走路要多久？", ruby: "<ruby>歩<rt>ある</rt></ruby>いてどのくらいかかりますか？", ja: "歩いてどのくらいかかりますか？", romaji: "Aruite donokurai kakarimasu ka?" },
+                    { zh: "請在地圖上指給我看", ruby: "地図で<ruby>指<rt>さ</rt></ruby>してくれませんか？", ja: "地図で指してくれませんか？", romaji: "Chizu de sashite kuremasen ka?" },
+                    { zh: "請直走", ruby: "まっすぐ<ruby>行<rt>い</rt></ruby>ってください", ja: "まっすぐ行ってください", romaji: "Massugu itte kudasai" },
+                    { zh: "在右邊 / 在左邊", ruby: "<ruby>右<rt>みぎ</rt></ruby> / <ruby>左<rt>ひだり</rt></ruby> にあります", ja: "右 / 左 にあります", romaji: "Migi / Hidari ni arimasu" }
+                ]
+            },
+            numbers: {
+                id: 'numbers', title: "數字與數量", icon: "fa-solid fa-list-ol", color: "bg-teal-500",
+                phrases: [
+                    { zh: "基本數字 1 到 5", ruby: "1 (いち) / 2 (に) / 3 (さん) / 4 (よん) / 5 (ご)", ja: "いち に さん よん ご", romaji: "Ichi / Ni / San / Yon / Go" },
+                    { zh: "基本數字 6 到 10", ruby: "6 (ろく) / 7 (なな) / 8 (はち) / 9 (きゅう) / 10 (じゅう)", ja: "ろく なな はち きゅう じゅう", romaji: "Roku / Nana / Hachi / Kyū / Jū" },
+                    { zh: "數量 1個 到 5個", ruby: "1つ (ひとつ) / 2つ (ふたつ) / 3つ (みっつ) / 4つ (よっつ) / 5つ (いつつ)", ja: "ひとつ ふたつ みっつ よっつ いつつ", romaji: "Hitotsu / Futatsu / Mittsu / Yottsu / Itsutsu" },
+                    { zh: "數量 6個 到 10個", ruby: "6つ (むっつ) / 7つ (ななつ) / 8つ (やっつ) / 9つ (ここのつ) / 10 (とお)", ja: "むっつ ななつ やっつ ここのつ とお", romaji: "Muttsu / Nanatsu / Yattsu / Kokonotsu / Tō" },
+                    { zh: "1人 / 2人 / 3人 / 4人", ruby: "1<ruby>人<rt>ひとり</rt></ruby> / 2<ruby>人<rt>ふたり</rt></ruby> / 3<ruby>人<rt>さんにん</rt></ruby> / 4<ruby>人<rt>よにん</rt></ruby>", ja: "ひとり ふたり さんにん よにん", romaji: "Hitori / Futari / Sannin / Yonin" },
+                    { zh: "百 / 千 / 萬", ruby: "<ruby>百<rt>ひゃく</rt></ruby> / <ruby>千<rt>せん</rt></ruby> / <ruby>一万<rt>いちまん</rt></ruby>", ja: "ひゃく せん いちまん", romaji: "Hyaku / Sen / Ichiman" },
+                    { zh: "全部多少錢？", ruby: "<ruby>全部<rt>ぜんぶ</rt></ruby>でいくらですか？", ja: "全部でいくらですか？", romaji: "Zenbu de ikura desu ka?" },
+                    { zh: "太貴了", ruby: "<ruby>高<rt>たか</rt></ruby>すぎます", ja: "高すぎます", romaji: "Takasugimasu" }
+                ]
+            },
+            time: {
+                id: 'time', title: "時間與日期", icon: "fa-regular fa-clock", color: "bg-indigo-400",
+                phrases: [
+                    { zh: "請問現在幾點？", ruby: "<ruby>今<rt>いま</rt></ruby>、<ruby>何時<rt>なんじ</rt></ruby>ですか？", ja: "今、何時ですか？", romaji: "Ima, nanji desu ka?" },
+                    { zh: "幾點開始？", ruby: "<ruby>何時<rt>なんじ</rt></ruby>からですか？", ja: "何時からですか？", romaji: "Nanji kara desu ka?" },
+                    { zh: "幾點關門（結束）？", ruby: "<ruby>何時<rt>なんじ</rt></ruby>までですか？", ja: "何時までですか？", romaji: "Nanji made desu ka?" },
+                    { zh: "大約需要多少時間？", ruby: "どのくらい<ruby>時間<rt>じかん</rt></ruby>がかかりますか？", ja: "どのくらい時間がかかりますか？", romaji: "Dono kurai jikan ga kakarimasu ka?" },
+                    { zh: "點 / 分 / 半 (時間單位)", ruby: "<ruby>時<rt>じ</rt></ruby> / <ruby>分<rt>ふん（ぷん）</rt></ruby> / <ruby>半<rt>はん</rt></ruby>", ja: "時 / 分 / 半", romaji: "Ji / Fun (Pun) / Han" },
+                    { zh: "時間讀法 (1到4點)", ruby: "1<ruby>時<rt>いちじ</rt></ruby> / 2<ruby>時<rt>にじ</rt></ruby> / 3<ruby>時<rt>さんじ</rt></ruby> / 4<ruby>時<rt>よじ</rt></ruby>", ja: "いちじ にじ さんじ よじ", romaji: "Ichiji / Niji / Sanji / Yoji" },
+                    { zh: "時間讀法 (7/9/12點)", ruby: "7<ruby>時<rt>しちじ</rt></ruby> / 9<ruby>時<rt>くじ</rt></ruby> / 12<ruby>時<rt>じゅうにじ</rt></ruby>", ja: "しちじ くじ じゅうにじ", romaji: "Shichiji / Kuji / Jūniji" },
+                    { zh: "早上 / 中午 / 下午 / 晚上", ruby: "<ruby>朝<rt>あさ</rt></ruby> / <ruby>昼<rt>ひる</rt></ruby> / <ruby>午後<rt>ごご</rt></ruby> / <ruby>夜<rt>よる</rt></ruby>", ja: "朝 / 昼 / 午後 / 夜", romaji: "Asa / Hiru / Gogo / Yoru" },
+                    { zh: "今天 / 明天 / 昨天", ruby: "<ruby>今日<rt>きょう</rt></ruby> / <ruby>明日<rt>あした</rt></ruby> / <ruby>昨日<rt>きのう</rt></ruby>", ja: "今日 / 明日 / 昨日", romaji: "Kyō / Ashita / Kinō" },
+                    { zh: "星期一 / 星期二 / 星期三", ruby: "<ruby>月曜日<rt>げつようび</rt></ruby> / <ruby>火曜日<rt>かようび</rt></ruby> / <ruby>水曜日<rt>すいようび</rt></ruby>", ja: "月曜日 / 火曜日 / 水曜日", romaji: "Getsuyōbi / Kayōbi / Suiyōbi" },
+                    { zh: "星期四 / 星期五", ruby: "<ruby>木曜日<rt>もくようび</rt></ruby> / <ruby>金曜日<rt>きんようび</rt></ruby>", ja: "木曜日 / 金曜日", romaji: "Mokuyōbi / Kinyōbi" },
+                    { zh: "星期六 / 星期天", ruby: "<ruby>土曜日<rt>どようび</rt></ruby> / <ruby>日曜日<rt>にちようび</rt></ruby>", ja: "土曜日 / 日曜日", romaji: "Doyōbi / Nichiyōbi" }
+                ]
+            },
+            emergency: {
+                id: 'emergency', title: "緊急求助", icon: "fa-solid fa-triangle-exclamation", color: "bg-red-600",
+                phrases: [
+                    { zh: "救命！/ 幫幫我！", ruby: "<ruby>助<rt>たす</rt></ruby>けて！", ja: "助けて！", romaji: "Tasukete!", intent: "negative" },
+                    { zh: "我不舒服", ruby: "<ruby>気分<rt>きぶん</rt></ruby>が<ruby>悪<rt>わる</rt></ruby>いです", ja: "気分が悪いです", romaji: "Kibun ga warui desu", intent: "negative" },
+                    { zh: "有人會說中文或英文嗎？", ruby: "<ruby>中国語<rt>ちゅうごくご</rt></ruby>か<ruby>英語<rt>えいご</rt></ruby>が<ruby>話<rt>はな</rt></ruby>せる<ruby>人<rt>ひと</rt></ruby>はいますか？", ja: "中国語か英語が話せる人はいますか？", romaji: "Chūgokugo ka eigo ga hanaseru hito wa imasu ka?" },
+                    { zh: "醫院 / 警察局在哪裡？", ruby: "<ruby>病院<rt>びょういん</rt></ruby> / <ruby>交番<rt>こうばん</rt></ruby> はどこですか？", ja: "病院 交番 はどこですか？", romaji: "Byōin / Kōban wa doko desu ka?" },
+                    { zh: "請幫我叫救護車", ruby: "<ruby>救急車<rt>きゅうきゅうしゃ</rt></ruby>を<ruby>呼<rt>よ</rt></ruby>んでください", ja: "救急車を呼んでください", romaji: "Kyūkyūsha o yonde kudasai", intent: "negative" },
+                    { zh: "我迷路了", ruby: "<ruby>道<rt>みち</rt></ruby>に<ruby>迷<rt>まよ</rt></ruby>いました", ja: "道に迷いました", romaji: "Michi ni mayoimashita" },
+                    { zh: "我的護照 / 錢包不見了", ruby: "パスポート / <ruby>財布<rt>さいふ</rt></ruby> をなくしました", ja: "パスポート 財布 をなくしました", romaji: "Pasupōto / Saifu o nakushimashita", intent: "negative" }
+                ]
+            },
+            useful_links: {
+                id: 'useful_links', title: "實用網站與求助", icon: "fa-solid fa-globe", color: "bg-amber-500", type: "links",
+                items: [
+                    { title: "Visit Japan Web", desc: "入境日本必備，線上辦理海關與檢疫", url: "https://www.vjw.digital.go.jp/main/#/vjwplo001", icon: "fa-solid fa-plane-arrival" },
+                    { title: "日本旅遊局官方指南", desc: "提供全日本的旅遊攻略與景點介紹", url: "https://www.japan.travel/tw/tw/", icon: "fa-solid fa-map" },
+                    { title: "日本天氣預報 (tenki.jp)", desc: "查詢日本各地即時天氣與氣象預報", url: "https://tenki.jp/", icon: "fa-solid fa-cloud-sun" },
+                    { title: "渠蓋卡收集 (マンホール)", desc: "尋找並收集日本各地的特色渠蓋卡", url: "https://www.gk-p.jp/mhcard/", icon: "fa-solid fa-map-pin" },
+                    { title: "綜合安全與災害資訊", desc: "官方發布的災害、天氣、避難所資訊", url: "https://www.jnto.go.jp/safety-tips/chc/index.html", icon: "fa-solid fa-shield-heart" }
+                ]
+            }
+        };
+
+        // DOM 元素
+        const homeView = document.getElementById('homeView');
+        const phraseView = document.getElementById('phraseView');
+        const categoryGrid = document.getElementById('categoryGrid');
+        const phraseList = document.getElementById('phraseList');
+        const headerTitle = document.getElementById('headerTitle');
+        const backBtn = document.getElementById('backBtn');
+
+        let currentSpeakingBtn = null;
+
+        // 初始化
+        function init() {
+            renderCategories();
+            
+            // 預載語音 (處理某些瀏覽器需要時間加載聲音的問題)
+            if (window.speechSynthesis) {
+                window.speechSynthesis.onvoiceschanged = function() {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        
+        // 渲染主頁分類卡片 (增加進場動畫與細節陰影)
+        function renderCategories() {
+            categoryGrid.innerHTML = '';
+            let delayIndex = 0;
+            for (const key in appData) {
+                const cat = appData[key];
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 p-2.5 flex flex-col items-center justify-center gap-1.5 active-scale cursor-pointer transition-all animate-fade-in";
+                card.style.animationDelay = `${delayIndex * 0.05}s`; // 錯開動畫時間，產生瀑布流效果
+                card.onclick = () => openCategory(key);
+                
+                card.innerHTML = `
+                    <div class="w-8 h-8 rounded-full ${cat.color} text-white flex items-center justify-center text-sm shadow-sm">
+                        <i class="${cat.icon}"></i>
+                    </div>
+                    <span class="font-bold text-gray-700 text-[0.75rem] tracking-wide">${cat.title}</span>
+                `;
+                categoryGrid.appendChild(card);
+                delayIndex++;
+            }
+        }
+
+        // 打開特定分類
+        function openCategory(key) {
+            const cat = appData[key];
+            
+            // 更新 Header
+            headerTitle.innerText = cat.title;
+            backBtn.classList.remove('hidden');
+            
+            // 切換視圖
+            homeView.classList.add('hidden');
+            phraseView.classList.remove('hidden');
+            
+            // 判斷分類類型 (對話列表 或 實用網站連結)
+            if (cat.type === 'links') {
+                renderLinks(cat.items);
+            } else {
+                renderPhrases(cat.phrases);
+            }
+            
+            // 滾動到頂部
+            document.getElementById('mainContent').scrollTop = 0;
+        }
+
+        // 返回主頁
+        function goBack() {
+            // 停止正在播放的聲音
+            if(window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            resetPlayButtons();
+
+            headerTitle.innerText = "日本旅遊小幫手 🇯🇵";
+            backBtn.classList.add('hidden');
+            
+            phraseView.classList.add('hidden');
+            homeView.classList.remove('hidden');
+            
+            // 返回主頁時重新觸發動畫
+            renderCategories();
+        }
+
+        // 渲染句子列表 (加入動畫與介面升級)
+        function renderPhrases(phrases) {
+            phraseList.innerHTML = '';
+            phrases.forEach((phrase, index) => {
+                const container = document.createElement('div');
+                container.className = "flex flex-col mb-4 animate-fade-in"; // 外層間距縮小
+                container.style.animationDelay = `${index * 0.08}s`; 
+                
+                // 1. 渲染情境說明
+                if (phrase.situation) {
+                    const sitDiv = document.createElement('div');
+                    sitDiv.className = "text-xs text-gray-500 mb-2 mt-2 px-1 flex items-center gap-1.5 font-bold tracking-wide";
+                    sitDiv.innerHTML = `<i class="fa-solid fa-map-pin text-rose-500"></i> ${phrase.situation}`;
+                    container.appendChild(sitDiv);
+                }
+
+                // 2. 渲染店員/對方的對話
+                if (phrase.clerk) {
+                    const clerkDiv = document.createElement('div');
+                    clerkDiv.className = "flex items-start gap-2 mb-2.5 w-full pr-4";
+                    clerkDiv.innerHTML = `
+                        <div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0 text-slate-600 text-xs shadow-sm mt-0.5 border border-slate-300">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="bg-slate-100 border border-slate-200 shadow-sm rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
+                            <div class="font-bold mb-0.5 text-[0.95rem] text-slate-800">${phrase.clerk.ruby || phrase.clerk.ja}</div>
+                            <div class="text-[0.7rem] text-slate-500 font-medium">${phrase.clerk.zh}</div>
+                        </div>
+                    `;
+                    container.appendChild(clerkDiv);
+                }
+
+                // 3. 渲染用戶要說的句子卡片 
+                const card = document.createElement('div');
+                
+                let extraClass = "bg-white border-gray-200"; 
+                if (phrase.isReply || phrase.clerk) {
+                    if (phrase.intent === 'positive') {
+                        extraClass = "bg-emerald-50 border-emerald-200 shadow-emerald-100/50"; 
+                    } else if (phrase.intent === 'negative') {
+                        extraClass = "bg-rose-50 border-rose-200 shadow-rose-100/50";   
+                    } else {
+                        extraClass = "bg-blue-50 border-blue-200 shadow-blue-100/50";    
+                    }
+                }
+                
+                card.className = `rounded-2xl shadow-sm border p-3.5 flex items-center justify-between ${extraClass}`;
+                
+                const textDiv = document.createElement('div');
+                textDiv.className = "flex-1 pr-3";
+                textDiv.innerHTML = `
+                    <h3 class="text-xs text-gray-600 mb-1 font-bold">${phrase.zh}</h3>
+                    <p class="text-[1.05rem] font-bold text-gray-900 mb-1.5 leading-relaxed tracking-wide">${phrase.ruby || phrase.ja}</p>
+                    <p class="text-[0.65rem] text-gray-400 font-mono tracking-widest uppercase">${phrase.romaji}</p>
+                `;
+                
+                const playBtn = document.createElement('button');
+                playBtn.className = "w-9 h-9 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-base flex-shrink-0 active-scale transition-colors shadow-sm border border-red-200";
+                playBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
+                playBtn.onclick = (e) => {
+                    playSpeech(phrase.ja, playBtn);
+                };
+                
+                card.appendChild(textDiv);
+                card.appendChild(playBtn);
+                container.appendChild(card);
+                
+                phraseList.appendChild(container);
+            });
+        }
+
+        // 渲染實用網站連結清單 (加入動畫)
+        function renderLinks(items) {
+            phraseList.innerHTML = '';
+            
+            const header = document.createElement('div');
+            header.className = "mb-4 text-xs text-amber-800 px-1 bg-amber-50 p-3.5 rounded-xl border border-amber-200 animate-fade-in font-medium";
+            header.innerHTML = "<p>點擊以下卡片將自動跳轉至相關網站，為您的日本旅行提供幫助（需網路連線）：</p>";
+            phraseList.appendChild(header);
+
+            items.forEach((item, index) => {
+                const card = document.createElement('a');
+                card.href = item.url;
+                card.target = "_blank"; 
+                card.rel = "noopener noreferrer";
+                card.className = "bg-white rounded-xl shadow-sm border border-gray-200 p-3.5 flex items-center gap-3 active-scale transition-shadow hover:shadow-md mb-3 no-underline block animate-fade-in";
+                card.style.animationDelay = `${(index + 1) * 0.08}s`;
+                
+                card.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-base flex-shrink-0 border border-amber-200">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <div class="flex-1 pr-2">
+                        <h3 class="text-sm font-bold text-gray-800 mb-0.5">${item.title}</h3>
+                        <p class="text-[0.7rem] text-gray-500 leading-relaxed">${item.desc}</p>
+                    </div>
+                    <div class="text-gray-300 text-sm">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                `;
+                phraseList.appendChild(card);
+            });
+        }
+
+        // 播放日語語音
+        function playSpeech(text, btnElement) {
+            // 檢查瀏覽器是否支援
+            if (!('speechSynthesis' in window)) {
+                alert("很抱歉，您的瀏覽器不支援語音播放功能。");
+                return;
+            }
+
+            // 停止目前的播放
+            window.speechSynthesis.cancel();
+            resetPlayButtons();
+
+            // 建立語音實例
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.lang = 'ja-JP'; // 設定語言為日文
+            msg.rate = 0.9; // 稍微放慢語速，讓外國人聽得更清楚
+            msg.pitch = 1.0;
+
+            // 嘗試尋找並設定日語女聲或男聲 (依系統而定)
+            const voices = window.speechSynthesis.getVoices();
+            const jpVoice = voices.find(voice => voice.lang === 'ja-JP' || voice.lang === 'ja_JP');
+            if (jpVoice) {
+                msg.voice = jpVoice;
+            }
+
+            // 播放事件監聽：開始播放時改變按鈕樣式
+            msg.onstart = function() {
+                currentSpeakingBtn = btnElement;
+                btnElement.classList.remove('bg-red-50', 'text-red-500');
+                btnElement.classList.add('bg-red-100', 'playing-icon');
+            };
+
+            // 播放結束時恢復按鈕樣式
+            msg.onend = function() {
+                resetPlayButtons();
+            };
+            
+            // 發生錯誤時
+            msg.onerror = function(event) {
+                console.error('Speech synthesis error', event);
+                resetPlayButtons();
+            };
+
+            // 開始播放
+            window.speechSynthesis.speak(msg);
+        }
+
+        // 重置所有播放按鈕的狀態
+        function resetPlayButtons() {
+            if (currentSpeakingBtn) {
+                currentSpeakingBtn.classList.add('bg-red-50', 'text-red-500');
+                currentSpeakingBtn.classList.remove('bg-red-100', 'playing-icon');
+                currentSpeakingBtn = null;
+            }
+        }
+
+        // 啟動應用
+        init();
+
+    </script>
+</body>
+</html>
