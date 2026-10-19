@@ -142,14 +142,14 @@
                 phrases: [
                     { zh: "早安", ruby: "<ruby>お早<rt>はや</rt></ruby>うございます", ja: "おはようございます", romaji: "Ohayou gozaimasu" },
                     { zh: "你好", ruby: "こんにちは", ja: "こんにちは", romaji: "Konnichiwa" },
-                    { zh: "不好意思 / 請問 / 借過 (最萬用的起手式)", ruby: "すみません", ja: "すみません", romaji: "Sumimasen" },
-                    { zh: "拜託您了 / 麻煩了 (提出要求時用)", ruby: "お<ruby>願<rt>ねが</rt></ruby>いします", ja: "お願いします", romaji: "Onegaishimasu", intent: "positive" },
+                    { zh: "不好意思 / 請問 / 借過 (起手式)", ruby: "すみません", ja: "すみません", romaji: "Sumimasen" },
+                    { zh: "拜託您了 / 麻煩了 (提出要求)", ruby: "お<ruby>願<rt>ねが</rt></ruby>いします", ja: "お願いします", romaji: "Onegaishimasu", intent: "positive" },
                     { zh: "請稍等一下", ruby: "<ruby>少々<rt>しょうしょう</rt></ruby>お<ruby>待<rt>ま</rt></ruby>ちください", ja: "少々お待ちください", romaji: "Shoushou omachi kudasai" },
+                    { zh: "我不懂日文", ruby: "<ruby>日本語<rt>にほんご</rt></ruby>がわかりません", ja: "日本語がわかりません", romaji: "Nihongo ga wakarimasen", intent: "negative" },
+                    { zh: "可以請您寫下來嗎？", ruby: "<ruby>書<rt>か</rt></ruby>いてくれませんか？", ja: "書いてくれませんか？", romaji: "Kaite kuremasen ka?" },
                     { zh: "是的 / 好", ruby: "はい", ja: "はい", romaji: "Hai", intent: "positive" },
                     { zh: "不是 / 不", ruby: "いいえ", ja: "いいえ", romaji: "Iie", intent: "negative" },
-                    { zh: "沒關係 / 不用了 (婉拒時用)", ruby: "<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です", ja: "大丈夫です", romaji: "Daijoubu desu", intent: "negative" },
-                    { zh: "謝謝", ruby: "ありがとうございます", ja: "ありがとうございます", romaji: "Arigatou gozaimasu" },
-                    { zh: "辛苦了 (對服務人員表示感謝)", ruby: "お<ruby>疲<rt>つか</rt></ruby>れ<ruby>様<rt>さま</rt></ruby>です", ja: "お疲れ様です", romaji: "Otsukaresama desu" }
+                    { zh: "謝謝", ruby: "ありがとうございます", ja: "ありがとうございます", romaji: "Arigatou gozaimasu" }
                 ]
             },
             convenience_store: {
@@ -177,17 +177,10 @@
                         isReply: true, intent: "positive"
                     },
                     { zh: "請給我湯匙 / 叉子", ruby: "スプーン / フォーク をください", ja: "スプーン / フォーク をください", romaji: "Supūn / fōku o kudasai", isReply: true, intent: "positive" },
-                    { zh: "請給我吸管", ruby: "ストローをください", ja: "ストローをください", romaji: "Sutorō o kudasai", isReply: true, intent: "positive" },
-                    { zh: "請給我一杯熱咖啡 / 冰咖啡 (櫃台點餐)", ruby: "ホットコーヒー / アイスコーヒー をください", ja: "ホットコーヒー / アイスコーヒー をください", romaji: "Hotto kōhī / Aisu kōhī o kudasai" },
                     { 
                         situation: "結帳付款時",
                         clerk: { ja: "お支払い方法は？", ruby: "お<ruby>支払<rt>しはら</rt></ruby>い<ruby>方法<rt>ほうほう</rt></ruby>は？", zh: "請問付款方式是？" },
                         zh: "我要用西瓜卡 (IC卡) 結帳", ruby: "Suica（スイカ）で<ruby>払<rt>はら</rt></ruby>います", ja: "Suicaで払います", romaji: "Suika de haraimasu", isReply: true
-                    },
-                    { 
-                        situation: "買菸酒時，店員要求確認年齡",
-                        clerk: { ja: "画面のボタンをタッチしてください", ruby: "<ruby>画面<rt>がめん</rt></ruby>のボタンをタッチしてください", zh: "請點擊螢幕上的確認按鈕" },
-                        zh: "是的，我已滿20歲", ruby: "はい、20<ruby>歳以上<rt>さいいじょう</rt></ruby>です", ja: "はい、20歳以上です", romaji: "Hai, hatachi ijō desu", isReply: true, intent: "positive"
                     }
                 ]
             },
@@ -198,13 +191,13 @@
                     { zh: "我有預約", ruby: "<ruby>予約<rt>よやく</rt></ruby>してあります", ja: "予約してあります", romaji: "Yoyaku shite arimasu" },
                     { zh: "可以先寄放行李嗎？(入住前)", ruby: "<ruby>荷物<rt>にもつ</rt></ruby>を<ruby>預<rt>あず</rt></ruby>かってもらえますか？", ja: "荷物を預かってもらえますか？", romaji: "Nimotsu o azukatte moraemasu ka?" },
                     { zh: "早餐是幾點開始？", ruby: "<ruby>朝食<rt>ちょうしょく</rt></ruby>は<ruby>何時<rt>なんじ</rt></ruby>からですか？", ja: "朝食は何時からですか？", romaji: "Chōshoku wa nanji kara desu ka?" },
-                    { zh: "Wi-Fi密碼是多少？", ruby: "Wi-Fiのパスワードは<ruby>何<rt>なん</rt></ruby>ですか？", ja: "Wi-Fiのパスワードは何ですか？", romaji: "Wai-fai no pasuwādo wa nan desu ka?" },
                     { zh: "可以給我多一條毛巾嗎？", ruby: "タオルをもう1<ruby>枚<rt>まい</rt></ruby>もらえますか？", ja: "タオルをもう1枚もらえますか？", romaji: "Taoru o mō ichimai moraemasu ka?" },
-                    { zh: "請幫我打掃房間", ruby: "<ruby>部屋<rt>へや</rt></ruby>の<ruby>掃除<rt>そうじ</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "部屋の掃除をお願いします", romaji: "Heya no sōji o onegaishimasu" },
-                    { zh: "我的房卡忘在房間裡了", ruby: "カードキーを<ruby>部屋<rt>へや</rt></ruby>に<ruby>忘<rt>わす</rt></ruby>れました", ja: "カードキーを部屋に忘れました", romaji: "Kādokī o heya ni wasuremashita" },
+                    { 
+                        situation: "遇到房間問題求助時",
+                        zh: "我把房卡反鎖在房間裡了", ruby: "<ruby>部屋<rt>へや</rt></ruby>に<ruby>鍵<rt>かぎ</rt></ruby>を<ruby>置<rt>お</rt></ruby>いたまま<ruby>出<rt>で</rt></ruby>てしまいました", ja: "部屋に鍵を置いたまま出てしまいました", romaji: "Heya ni kagi o oita mama dete shimaimashita", intent: "negative" 
+                    },
                     { zh: "房間沒有熱水", ruby: "<ruby>部屋<rt>へや</rt></ruby>のお<ruby>湯<rt>ゆ</rt></ruby>が<ruby>出<rt>で</rt></ruby>ません", ja: "部屋のお湯が出ません", romaji: "Heya no oyu ga demasen", intent: "negative" },
                     { zh: "冷氣/暖氣壞了", ruby: "エアコンが<ruby>壊<rt>こわ</rt></ruby>れています", ja: "エアコンが壊れています", romaji: "Eakon ga kowarete imasu", intent: "negative" },
-                    { zh: "請幫我叫計程車", ruby: "タクシーを<ruby>呼<rt>よ</rt></ruby>んでください", ja: "タクシーを呼んでください", romaji: "Takushī o yonde kudasai" },
                     { zh: "請問可以延遲退房嗎？", ruby: "レイトチェックアウトはできますか？", ja: "レイトチェックアウトはできますか？", romaji: "Reito chekkuauto wa dekimasu ka?" },
                     { zh: "我要辦理退房", ruby: "チェックアウトをお<ruby>願<rt>ねが</rt></ruby>いします", ja: "チェックアウトをお願いします", romaji: "Chekkuauto o onegaishimasu" }
                 ]
@@ -213,51 +206,59 @@
                 id: 'dining', title: "餐廳美食", icon: "fa-solid fa-utensils", color: "bg-rose-500",
                 phrases: [
                     { 
-                        situation: "剛進入餐廳時",
+                        situation: "剛進入餐廳，店員詢問人數與預約",
                         clerk: { ja: "何名様ですか？", ruby: "<ruby>何名様<rt>なんめいさま</rt></ruby>ですか？", zh: "請問幾位？" },
                         zh: "1人 / 2人 / 3人 / 4人", ruby: "1<ruby>人<rt>ひとり</rt></ruby> / 2<ruby>人<rt>ふたり</rt></ruby> / 3<ruby>人<rt>さんにん</rt></ruby> / 4<ruby>人<rt>よにん</rt></ruby>", ja: "ひとり ふたり さんにん よにん", romaji: "Hitori / Futari / Sannin / Yonin",
-                        isReply: true, intent: "neutral"
+                        isReply: true
                     },
+                    {
+                        clerk: { ja: "ご予約はされていますか？", ruby: "ご<ruby>予約<rt>よやく</rt></ruby>はされていますか？", zh: "請問有預約嗎？" },
+                        zh: "我有預約，我姓〇〇", ruby: "<ruby>予約<rt>よやく</rt></ruby>している〇〇です", ja: "予約している〇〇です", romaji: "Yoyaku shiteiru 〇〇 desu", isReply: true, intent: "positive"
+                    },
+                    { zh: "我沒有預約", ruby: "<ruby>予約<rt>よやく</rt></ruby>していません", ja: "予約していません", romaji: "Yoyaku shiteimasen", isReply: true, intent: "negative" },
                     { zh: "有英文/中文菜單嗎？", ruby: "<ruby>英語<rt>えいご</rt></ruby> / <ruby>中国語<rt>ちゅうごくご</rt></ruby> のメニューはありますか？", ja: "英語 / 中国語 のメニューはありますか？", romaji: "Eigo / Chūgokugo no menyū wa arimasu ka?" },
-                    { zh: "有什麼推薦的嗎？", ruby: "おすすめはどれですか？", ja: "おすすめはどれですか？", romaji: "Osusume wa dore desu ka?" },
                     { 
                         situation: "看菜單準備點餐時",
                         clerk: { ja: "ご注文はお決まりですか？", ruby: "ご<ruby>注文<rt>ちゅうもん</rt></ruby>はお<ruby>決<rt>き</rt></ruby>まりですか？", zh: "決定好要點什麼了嗎？" },
-                        zh: "請給我這個 (指著菜單)", ruby: "これをください", ja: "これをください", romaji: "Kore o kudasai",
-                        isReply: true, intent: "positive"
+                        zh: "請給我這個 (指著菜單)", ruby: "これをください", ja: "これをください", romaji: "Kore o kudasai", isReply: true, intent: "positive"
                     },
                     { zh: "我不吃肉/海鮮", ruby: "<ruby>肉<rt>にく</rt></ruby> / <ruby>魚介類<rt>ぎょかいるい</rt></ruby> は<ruby>食<rt>た</rt></ruby>べられません", ja: "肉 / 魚介類 は食べられません", romaji: "Niku / Gyokairui wa taberaremasen", intent: "negative" },
-                    { zh: "請給我水", ruby: "お<ruby>水<rt>みず</rt></ruby>をください", ja: "お水をください", romaji: "Omizu o kudasai" },
-                    { zh: "太好吃了", ruby: "とても<ruby>美味<rt>おい</rt></ruby>しいです", ja: "とても美味しいです", romaji: "Totemo oishii desu", intent: "positive" },
-                    { zh: "麻煩結帳", ruby: "お<ruby>会計<rt>かいけい</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "お会計をお願いします", romaji: "Okaikei o onegaishimasu" },
+                    { 
+                        situation: "在星巴克 (Starbucks) 點餐時",
+                        zh: "我要一杯抹茶星冰樂", ruby: "抹茶（まっちゃ）フラペチーノをください", ja: "抹茶フラペチーノをください", romaji: "Matcha furapechīno o kudasai" 
+                    },
+                    { zh: "熱拿鐵 / 冰美式", ruby: "ホットラテ / アイスアメリカーノ をください", ja: "ホットラテ / アイスアメリカーノ をください", romaji: "Hotto rate / Aisu amerikāno o kudasai" },
+                    { zh: "請給我中杯 (Tall) / 大杯 (Grande)", ruby: "トールサイズ / グランデサイズ でお<ruby>願<rt>ねが</rt></ruby>いします", ja: "トールサイズ / グランデサイズ でお願いします", romaji: "Tōru saizu / Gurande saizu de onegaishimasu" },
+                    { 
+                        situation: "用餐完畢結帳時",
+                        zh: "麻煩結帳", ruby: "お<ruby>会計<rt>かいけい</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします", ja: "お会計をお願いします", romaji: "Okaikei o onegaishimasu" 
+                    },
                     { zh: "可以分開結帳嗎？", ruby: "<ruby>別々<rt>べつべつ</rt></ruby>でお<ruby>願<rt>ねが</rt></ruby>いします", ja: "別々でお願いします", romaji: "Betsubetsu de onegaishimasu" }
                 ]
             },
             shopping: {
                 id: 'shopping', title: "購物血拼", icon: "fa-solid fa-bag-shopping", color: "bg-pink-500",
                 phrases: [
+                    { 
+                        situation: "尋找商品與試穿",
+                        zh: "請問有這個嗎？(展示照片)", ruby: "この<ruby>写真<rt>しゃしん</rt></ruby>のものはありますか？", ja: "この写真のものはありますか？", romaji: "Kono shashin no mono wa arimasu ka?" 
+                    },
                     { zh: "請問更衣室在哪裡？", ruby: "<ruby>試着室<rt>しちゃくしつ</rt></ruby>はどこですか？", ja: "試着室はどこですか？", romaji: "Shichakushitsu wa doko desu ka?" },
                     { zh: "請問可以試穿嗎？", ruby: "<ruby>試着<rt>しちゃく</rt></ruby>してもいいですか？", ja: "試着してもいいですか？", romaji: "Shichaku shite mo ii desu ka?" },
-                    { zh: "請問有 S / M / L 尺寸嗎？", ruby: "S / M / L サイズはありますか？", ja: "S / M / L サイズはありますか？", romaji: "Esu / Emu / Eru saizu wa arimasu ka?" },
+                    { zh: "請問有 S / M / L 尺寸嗎？", ruby: "エス / エム / エル サイズはありますか？", ja: "S / M / L サイズはありますか？", romaji: "Esu / Emu / Eru saizu wa arimasu ka?" },
                     { zh: "我可以拿大一點/小一點的尺寸嗎？", ruby: "もう<ruby>少<rt>すこ</rt></ruby>し<ruby>大<rt>おお</rt></ruby>きい（<ruby>小<rt>ちい</rt></ruby>さい）サイズはありますか？", ja: "もう少し大きい（小さい）サイズはありますか？", romaji: "Mō sukoshi ōkii (chiisai) saizu wa arimasu ka?" },
-                    { zh: "有其他顏色嗎？", ruby: "<ruby>色違<rt>いろちが</rt></ruby>いはありますか？", ja: "色違いはありますか？", romaji: "Irochigai wa arimasu ka?" },
                     { zh: "有全新的嗎？", ruby: "<ruby>新<rt>あたら</rt></ruby>しいものはありますか？", ja: "新しいものはありますか？", romaji: "Atarashii mono wa arimasu ka?" },
-                    { zh: "這個多少錢？", ruby: "これはいくらですか？", ja: "これはいくらですか？", romaji: "Kore wa ikura desu ka?" },
                     { 
-                        situation: "購買指定數量時",
-                        zh: "這個我要 1個 / 2個 / 3個", 
-                        ruby: "これを 1つ (ひとつ) / 2つ (ふたつ) / 3つ (みっつ) ください", 
-                        ja: "これをひとつ、ふたつ、みっつください", 
-                        romaji: "Kore o hitotsu / futatsu / mittsu kudasai" 
+                        situation: "決定購買與包裝",
+                        zh: "這個我要 1個 / 2個 / 3個", ruby: "これを 1つ (ひとつ) / 2つ (ふたつ) / 3つ (みっつ) ください", ja: "これをひとつ、ふたつ、みっつください", romaji: "Kore o hitotsu / futatsu / mittsu kudasai" 
                     },
                     { zh: "我要買這個當作禮物", ruby: "これをプレゼント<ruby>用<rt>よう</rt></ruby>にしてください", ja: "これをプレゼント用にしてください", romaji: "Kore o purezento yō ni shite kudasai" },
                     { zh: "請幫我分開包裝", ruby: "<ruby>別々<rt>べつべつ</rt></ruby>に<ruby>包<rt>つつ</rt></ruby>んでください", ja: "別々に包んでください", romaji: "Betsubetsu ni tsutsunde kudasai" },
-                    { zh: "不用袋子", ruby: "<ruby>袋<rt>ふくろ</rt></ruby>はいりません", ja: "袋はいりません", romaji: "Fukuro wa irimasen", intent: "negative" },
-                    { zh: "可以使用信用卡嗎？", ruby: "クレジットカードは<ruby>使<rt>つか</rt></ruby>えますか？", ja: "クレジットカードは使えますか？", romaji: "Kurejitto kādo wa tsukaemasu ka?" },
                     { 
-                        situation: "關於免稅 (Tax Free)",
-                        zh: "請問可以免稅嗎？", ruby: "<ruby>免税<rt>めんぜい</rt></ruby>できますか？", ja: "免税できますか？", romaji: "Menzei dekimasu ka?" 
+                        situation: "結帳與免稅 (Tax Free)",
+                        zh: "可以使用信用卡嗎？", ruby: "クレジットカードは<ruby>使<rt>つか</rt></ruby>えますか？", ja: "クレジットカードは使えますか？", romaji: "Kurejitto kādo wa tsukaemasu ka?" 
                     },
+                    { zh: "請問可以免稅嗎？", ruby: "<ruby>免税<rt>めんぜい</rt></ruby>できますか？", ja: "免税できますか？", romaji: "Menzei dekimasu ka?" },
                     { zh: "免稅需要達到多少金額？", ruby: "いくらから<ruby>免税<rt>めんぜい</rt></ruby>になりますか？", ja: "いくらから免税になりますか？", romaji: "Ikura kara menzei ni narimasu ka?" },
                     { zh: "請問免稅櫃台在哪裡？", ruby: "<ruby>免税<rt>めんぜい</rt></ruby>カウンターはどこですか？", ja: "免税カウンターはどこですか？", romaji: "Menzei kauntā wa doko desu ka?" }
                 ]
@@ -266,39 +267,41 @@
                 id: 'pop_culture', title: "動漫與收藏", icon: "fa-solid fa-gamepad", color: "bg-purple-500",
                 phrases: [
                     { 
-                        situation: "收集渠蓋卡 (マンホールカード)",
-                        zh: "不好意思，請給我渠蓋卡！", ruby: "すみません、マンホールカード、お<ruby>願<rt>ねが</rt></ruby>いします！", ja: "すみません、マンホールカード、お願いします！", romaji: "Sumimasen, manhōru kādo, onegaishimasu!", intent: "positive"
-                    },
-                    { 
                         situation: "抽一番賞 (一番くじ)",
                         zh: "請問有這個一番賞嗎？", ruby: "すみません、この<ruby>一番<rt>いちばん</rt></ruby>くじはありますか？", ja: "すみません、この一番くじはありますか？", romaji: "Sumimasen, kono ichiban kuji wa arimasu ka?" 
                     },
-                    { 
-                        zh: "我要抽 3 次", ruby: "3<ruby>回<rt>かい</rt></ruby>お<ruby>願<rt>ねが</rt></ruby>いします", ja: "3回お願いします", romaji: "Sankai onegaishimasu", intent: "positive"
-                    },
+                    { zh: "我要抽 3 次", ruby: "3<ruby>回<rt>かい</rt></ruby>お<ruby>願<rt>ねが</rt></ruby>いします", ja: "3回お願いします", romaji: "Sankai onegaishimasu", intent: "positive" },
                     { 
                         situation: "寶可夢中心 (Pokémon Center)",
                         zh: "請問有寶可夢卡牌嗎？", ruby: "ポケモンカードはありますか？", ja: "ポケモンカードはありますか？", romaji: "Pokemon kādo wa arimasu ka?" 
                     },
+                    { zh: "請問有徽章 (Pin) 嗎？", ruby: "ピンズはありますか？", ja: "ピンズはありますか？", romaji: "Pinzu wa arimasu ka?" },
+                    { zh: "請問有這個公仔嗎？(展示照片)", ruby: "このぬいぐるみはありますか？", ja: "このぬいぐるみはありますか？", romaji: "Kono nuigurumi wa arimasu ka?" },
                     { 
-                        zh: "請問有徽章 (Pin) 嗎？", ruby: "ピンズ（ピンバッジ）はありますか？", ja: "ピンズ（ピンバッジ）はありますか？", romaji: "Pinzu (Pinbajji) wa arimasu ka?" 
-                    },
-                    { 
-                        zh: "請問有這個公仔嗎？ (可指著照片)", ruby: "このぬいぐるみはありますか？", ja: "このぬいぐるみはありますか？", romaji: "Kono nuigurumi wa arimasu ka?" 
+                        situation: "收集渠蓋卡 (マンホールカード)",
+                        zh: "不好意思，請給我渠蓋卡！", ruby: "すみません、マンホールカード、お<ruby>願<rt>ねが</rt></ruby>いします！", ja: "すみません、マンホールカード、お願いします！", romaji: "Sumimasen, manhōru kādo, onegaishimasu!", intent: "positive"
                     }
                 ]
             },
             transport: {
                 id: 'transport', title: "交通指引", icon: "fa-solid fa-train-subway", color: "bg-blue-500",
                 phrases: [
-                    { zh: "我想去〇〇", ruby: "〇〇へ<ruby>行<rt>い</rt></ruby>きたいです", ja: "〇〇へ行きたいです", romaji: "〇〇 e ikitai desu" },
-                    { zh: "我要買到〇〇的車票", ruby: "〇〇までの<ruby>切符<rt>きっぷ</rt></ruby>をください", ja: "〇〇までの切符をください", romaji: "〇〇 made no kippu o kudasai" },
-                    { zh: "我要儲值交通卡 (IC卡)", ruby: "ICカードにチャージしたいです", ja: "ICカードにチャージしたいです", romaji: "IC ka-do ni cha-ji shitai desu" },
-                    { zh: "這班車會到〇〇嗎？", ruby: "この<ruby>電車<rt>でんしゃ</rt></ruby>は〇〇に<ruby>行<rt>い</rt></ruby>きますか？", ja: "この電車は〇〇に行きますか？", romaji: "Kono densha wa 〇〇 ni ikimasu ka?" },
+                    { 
+                        situation: "車站尋找與搭車",
+                        zh: "這班車會到〇〇嗎？", ruby: "この<ruby>電車<rt>でんしゃ</rt></ruby>は〇〇に<ruby>行<rt>い</rt></ruby>きますか？", ja: "この電車は〇〇に行きますか？", romaji: "Kono densha wa 〇〇 ni ikimasu ka?" 
+                    },
+                    { zh: "請問這班車在哪個月台搭？", ruby: "この<ruby>電車<rt>でんしゃ</rt></ruby>は<ruby>何番線<rt>なんばんせん</rt></ruby>ですか？", ja: "この電車は何番線ですか？", romaji: "Kono densha wa nanbansen desu ka?" },
                     { zh: "在哪裡換車？", ruby: "どこで<ruby>乗<rt>の</rt></ruby>り<ruby>換<rt>か</rt></ruby>えですか？", ja: "どこで乗り換えですか？", romaji: "Doko de norikae desu ka?" },
-                    { zh: "下一站是哪裡？", ruby: "<ruby>次<rt>つぎ</rt></ruby>の<ruby>駅<rt>えき</rt></ruby>はどこですか？", ja: "次の駅はどこですか？", romaji: "Tsugi no eki wa doko desu ka?" },
-                    { zh: "我要下車 (公車/計程車)", ruby: "<ruby>降<rt>お</rt></ruby>ります", ja: "降ります", romaji: "Orimasu" },
-                    { zh: "請載我到這裡 (給計程車司機)", ruby: "ここまでお<ruby>願<rt>ねが</rt></ruby>いします", ja: "ここまでお願いします", romaji: "Koko made onegaishimasu" }
+                    { 
+                        situation: "新幹線票務處理",
+                        zh: "我想更改新幹線的預約", ruby: "新幹線の<ruby>予約<rt>よやく</rt></ruby>を<ruby>変更<rt>へんこう</rt></ruby>したいです", ja: "新幹線の予約を変更したいです", romaji: "Shinkansen no yoyaku o henkō shitai desu" 
+                    },
+                    { zh: "我想改時間 / 換座位", ruby: "<ruby>時間<rt>じかん</rt></ruby>を<ruby>変更<rt>へんこう</rt></ruby>したいです / <ruby>席<rt>せき</rt></ruby>を<ruby>変更<rt>へんこう</rt></ruby>したいです", ja: "時間を変更したいです / 席を変更したいです", romaji: "Jikan o henkō shitai desu / Seki o henkō shitai desu" },
+                    { 
+                        situation: "計程車與公車",
+                        zh: "請載我到這裡 (給計程車司機)", ruby: "ここまでお<ruby>願<rt>ねが</rt></ruby>いします", ja: "ここまでお願いします", romaji: "Koko made onegaishimasu" 
+                    },
+                    { zh: "我要下車 (公車/計程車)", ruby: "<ruby>降<rt>お</rt></ruby>ります", ja: "降ります", romaji: "Orimasu" }
                 ]
             },
             directions: {
@@ -319,23 +322,17 @@
                     { zh: "基本數字 6 到 10", ruby: "6 (ろく) / 7 (なな) / 8 (はち) / 9 (きゅう) / 10 (じゅう)", ja: "ろく なな はち きゅう じゅう", romaji: "Roku / Nana / Hachi / Kyū / Jū" },
                     { zh: "數量 1個 到 5個", ruby: "1つ (ひとつ) / 2つ (ふたつ) / 3つ (みっつ) / 4つ (よっつ) / 5つ (いつつ)", ja: "ひとつ ふたつ みっつ よっつ いつつ", romaji: "Hitotsu / Futatsu / Mittsu / Yottsu / Itsutsu" },
                     { zh: "數量 6個 到 10個", ruby: "6つ (むっつ) / 7つ (ななつ) / 8つ (やっつ) / 9つ (ここのつ) / 10 (とお)", ja: "むっつ ななつ やっつ ここのつ とお", romaji: "Muttsu / Nanatsu / Yattsu / Kokonotsu / Tō" },
-                    { zh: "1人 / 2人 / 3人 / 4人", ruby: "1<ruby>人<rt>ひとり</rt></ruby> / 2<ruby>人<rt>ふたり</rt></ruby> / 3<ruby>人<rt>さんにん</rt></ruby> / 4<ruby>人<rt>よにん</rt></ruby>", ja: "ひとり ふたり さんにん よにん", romaji: "Hitori / Futari / Sannin / Yonin" },
-                    { zh: "百 / 千 / 萬", ruby: "<ruby>百<rt>ひゃく</rt></ruby> / <ruby>千<rt>せん</rt></ruby> / <ruby>一万<rt>いちまん</rt></ruby>", ja: "ひゃく せん いちまん", romaji: "Hyaku / Sen / Ichiman" },
-                    { zh: "全部多少錢？", ruby: "<ruby>全部<rt>ぜんぶ</rt></ruby>でいくらですか？", ja: "全部でいくらですか？", romaji: "Zenbu de ikura desu ka?" },
-                    { zh: "太貴了", ruby: "<ruby>高<rt>たか</rt></ruby>すぎます", ja: "高すぎます", romaji: "Takasugimasu" }
+                    { zh: "百 / 千 / 萬", ruby: "<ruby>百<rt>ひゃく</rt></ruby> / <ruby>千<rt>せん</rt></ruby> / <ruby>一万<rt>いちまん</rt></ruby>", ja: "ひゃく せん いちまん", romaji: "Hyaku / Sen / Ichiman" }
                 ]
             },
             time: {
                 id: 'time', title: "時間與日期", icon: "fa-regular fa-clock", color: "bg-indigo-400",
                 phrases: [
                     { zh: "請問現在幾點？", ruby: "<ruby>今<rt>いま</rt></ruby>、<ruby>何時<rt>なんじ</rt></ruby>ですか？", ja: "今、何時ですか？", romaji: "Ima, nanji desu ka?" },
-                    { zh: "幾點開始？", ruby: "<ruby>何時<rt>なんじ</rt></ruby>からですか？", ja: "何時からですか？", romaji: "Nanji kara desu ka?" },
-                    { zh: "幾點關門（結束）？", ruby: "<ruby>何時<rt>なんじ</rt></ruby>までですか？", ja: "何時までですか？", romaji: "Nanji made desu ka?" },
-                    { zh: "大約需要多少時間？", ruby: "どのくらい<ruby>時間<rt>じかん</rt></ruby>がかかりますか？", ja: "どのくらい時間がかかりますか？", romaji: "Dono kurai jikan ga kakarimasu ka?" },
-                    { zh: "點 / 分 / 半 (時間單位)", ruby: "<ruby>時<rt>じ</rt></ruby> / <ruby>分<rt>ふん（ぷん）</rt></ruby> / <ruby>半<rt>はん</rt></ruby>", ja: "時 / 分 / 半", romaji: "Ji / Fun (Pun) / Han" },
-                    { zh: "時間讀法 (1到4點)", ruby: "1<ruby>時<rt>いちじ</rt></ruby> / 2<ruby>時<rt>にじ</rt></ruby> / 3<ruby>時<rt>さんじ</rt></ruby> / 4<ruby>時<rt>よじ</rt></ruby>", ja: "いちじ にじ さんじ よじ", romaji: "Ichiji / Niji / Sanji / Yoji" },
-                    { zh: "時間讀法 (7/9/12點)", ruby: "7<ruby>時<rt>しちじ</rt></ruby> / 9<ruby>時<rt>くじ</rt></ruby> / 12<ruby>時<rt>じゅうにじ</rt></ruby>", ja: "しちじ くじ じゅうにじ", romaji: "Shichiji / Kuji / Jūniji" },
-                    { zh: "早上 / 中午 / 下午 / 晚上", ruby: "<ruby>朝<rt>あさ</rt></ruby> / <ruby>昼<rt>ひる</rt></ruby> / <ruby>午後<rt>ごご</rt></ruby> / <ruby>夜<rt>よる</rt></ruby>", ja: "朝 / 昼 / 午後 / 夜", romaji: "Asa / Hiru / Gogo / Yoru" },
+                    { zh: "幾點開始？/ 幾點結束？", ruby: "<ruby>何時<rt>なんじ</rt></ruby>からですか？ / <ruby>何時<rt>なんじ</rt></ruby>までですか？", ja: "何時からですか？ 何時までですか？", romaji: "Nanji kara desu ka? / Nanji made desu ka?" },
+                    { zh: "時間讀法 (4/7/9點)", ruby: "4<ruby>時<rt>よじ</rt></ruby> / 7<ruby>時<rt>しちじ</rt></ruby> / 9<ruby>時<rt>くじ</rt></ruby>", ja: "よじ しちじ くじ", romaji: "Yoji / Shichiji / Kuji" },
+                    { zh: "點 / 分 / 半 (單位)", ruby: "<ruby>時<rt>じ</rt></ruby> / <ruby>分<rt>ふん（ぷん）</rt></ruby> / <ruby>半<rt>はん</rt></ruby>", ja: "時 / 分 / 半", romaji: "Ji / Fun (Pun) / Han" },
+                    { zh: "早上 / 中午 / 晚上", ruby: "<ruby>朝<rt>あさ</rt></ruby> / <ruby>昼<rt>ひる</rt></ruby> / <ruby>夜<rt>よる</rt></ruby>", ja: "朝 / 昼 / 夜", romaji: "Asa / Hiru / Yoru" },
                     { zh: "今天 / 明天 / 昨天", ruby: "<ruby>今日<rt>きょう</rt></ruby> / <ruby>明日<rt>あした</rt></ruby> / <ruby>昨日<rt>きのう</rt></ruby>", ja: "今日 / 明日 / 昨日", romaji: "Kyō / Ashita / Kinō" },
                     { zh: "星期一 / 星期二 / 星期三", ruby: "<ruby>月曜日<rt>げつようび</rt></ruby> / <ruby>火曜日<rt>かようび</rt></ruby> / <ruby>水曜日<rt>すいようび</rt></ruby>", ja: "月曜日 / 火曜日 / 水曜日", romaji: "Getsuyōbi / Kayōbi / Suiyōbi" },
                     { zh: "星期四 / 星期五", ruby: "<ruby>木曜日<rt>もくようび</rt></ruby> / <ruby>金曜日<rt>きんようび</rt></ruby>", ja: "木曜日 / 金曜日", romaji: "Mokuyōbi / Kinyōbi" },
@@ -348,14 +345,89 @@
                     { zh: "救命！/ 幫幫我！", ruby: "<ruby>助<rt>たす</rt></ruby>けて！", ja: "助けて！", romaji: "Tasukete!", intent: "negative" },
                     { zh: "我不舒服", ruby: "<ruby>気分<rt>きぶん</rt></ruby>が<ruby>悪<rt>わる</rt></ruby>いです", ja: "気分が悪いです", romaji: "Kibun ga warui desu", intent: "negative" },
                     { zh: "有人會說中文或英文嗎？", ruby: "<ruby>中国語<rt>ちゅうごくご</rt></ruby>か<ruby>英語<rt>えいご</rt></ruby>が<ruby>話<rt>はな</rt></ruby>せる<ruby>人<rt>ひと</rt></ruby>はいますか？", ja: "中国語か英語が話せる人はいますか？", romaji: "Chūgokugo ka eigo ga hanaseru hito wa imasu ka?" },
-                    { zh: "醫院 / 警察局在哪裡？", ruby: "<ruby>病院<rt>びょういん</rt></ruby> / <ruby>交番<rt>こうばん</rt></ruby> はどこですか？", ja: "病院 交番 はどこですか？", romaji: "Byōin / Kōban wa doko desu ka?" },
                     { zh: "請幫我叫救護車", ruby: "<ruby>救急車<rt>きゅうきゅうしゃ</rt></ruby>を<ruby>呼<rt>よ</rt></ruby>んでください", ja: "救急車を呼んでください", romaji: "Kyūkyūsha o yonde kudasai", intent: "negative" },
-                    { zh: "我迷路了", ruby: "<ruby>道<rt>みち</rt></ruby>に<ruby>迷<rt>まよ</rt></ruby>いました", ja: "道に迷いました", romaji: "Michi ni mayoimashita" },
                     { zh: "我的護照 / 錢包不見了", ruby: "パスポート / <ruby>財布<rt>さいふ</rt></ruby> をなくしました", ja: "パスポート 財布 をなくしました", romaji: "Pasupōto / Saifu o nakushimashita", intent: "negative" }
                 ]
             },
+            exchange: {
+                id: 'exchange', title: "匯率換算", icon: "fa-solid fa-calculator", color: "bg-yellow-500", type: "exchange"
+            },
+            checklist: {
+                id: 'checklist', title: "出發前檢查", icon: "fa-solid fa-list-check", color: "bg-slate-600", type: "checklist",
+                sections: [
+                    {
+                        title: "證件與文件",
+                        icon: "fa-regular fa-id-card",
+                        items: [
+                            "香港身份證",
+                            "護照 (確認有效期至少 6 個月以上)",
+                            "機票確認單 (去程 HX618 / 回程 HX615)",
+                            "Agoda 預訂確認單 - 維亞新大阪酒店 (紙本備用)",
+                            "Agoda 預訂確認電郵",
+                            "旅遊保險證明 (保單編號及緊急熱線)",
+                            "起飛前 48 小時預辦登機手續",
+                            "AirSim 準備就緒 (Docomo IIJ 全無限 7天)",
+                            "Visit Japan Web 更新完畢並截圖保存"
+                        ]
+                    },
+                    {
+                        title: "金錢與支付",
+                        icon: "fa-solid fa-money-bill-wave",
+                        items: [
+                            "日圓現金 (¥200,000)",
+                            "少量港幣",
+                            "預先開通提款卡的海外提款功能",
+                            "信用卡 (VISA、Mastercard)",
+                            "IC卡 (Suica / ICOCA，抵步後增值)",
+                            "開通八達通的 Paypay 功能"
+                        ]
+                    },
+                    {
+                        title: "行李與個人用品",
+                        icon: "fa-solid fa-suitcase",
+                        items: [
+                            "日常替換衣物 (參考 10 月中旬關西氣溫)",
+                            "輕便外套或保溫外套",
+                            "帽子",
+                            "酒店用即棄拖鞋",
+                            "個人衛生用品 (沐浴露, 洗頭水, 牙刷, 毛巾)",
+                            "防疫用品 (口罩, 消毒用品, 濕紙巾, 紙巾)",
+                            "防曬、保濕及潤膚用品",
+                            "常用藥物 (膠布, 必利痛, 感冒藥, 保濟丸等)",
+                            "大型環保袋 (準備裝戰利品)",
+                            "氣泡紙、硬身收納盒 (保護模型與卡牌)",
+                            "飲用水水樽、雨傘、餐具"
+                        ]
+                    },
+                    {
+                        title: "電子設備與其他",
+                        icon: "fa-solid fa-mobile-screen",
+                        items: [
+                            "手機充電器、充電線及轉接器 (兩腳扁插)",
+                            "外置充電器 (需 3C 認證，必須手提不可寄艙)",
+                            "無線耳機、電鬚刨",
+                            "手錶及充電線",
+                            "關西、大阪、京都、神戶交通地圖及鐵路線圖",
+                            "蓋印章用的記事本、御朱印手帳",
+                            "原子筆、膠紙、剪刀 (剪刀需放入寄艙行李)",
+                            "行程表、證件與保險副本交給家人",
+                            "旅行相關 App 安裝及更新"
+                        ]
+                    }
+                ]
+            },
+            apps: {
+                id: 'apps', title: "推薦 App", icon: "fa-solid fa-mobile-screen-button", color: "bg-cyan-500", type: "links",
+                items: [
+                    { title: "Payke", desc: "掃描商品條碼，立刻顯示中文商品資訊與評價", url: "https://payke.co.jp/", icon: "fa-solid fa-barcode" },
+                    { title: "Suica Reader", desc: "手機感應 IC 卡，隨時查詢餘額與乘車紀錄", url: "https://play.google.com/store/apps/details?id=yanzm.products.suicareader", icon: "fa-brands fa-nfc-symbol" },
+                    { title: "Tabelog (食べログ)", desc: "日本最具公信力的餐廳指南與評分網", url: "https://tabelog.com/tw/", icon: "fa-solid fa-star" },
+                    { title: "FlightAware", desc: "即時航班追蹤，掌握起降時間與登機門資訊", url: "https://zh.flightaware.com/", icon: "fa-solid fa-plane-departure" },
+                    { title: "My HKG", desc: "香港國際機場官方 App，掌握回程航班動態", url: "https://www.hongkongairport.com/tc/flights/myhkg-mobile-app/", icon: "fa-solid fa-passport" }
+                ]
+            },
             useful_links: {
-                id: 'useful_links', title: "實用網站與求助", icon: "fa-solid fa-globe", color: "bg-amber-500", type: "links",
+                id: 'useful_links', title: "實用網站", icon: "fa-solid fa-globe", color: "bg-amber-500", type: "links",
                 items: [
                     { title: "Visit Japan Web", desc: "入境日本必備，線上辦理海關與檢疫", url: "https://www.vjw.digital.go.jp/main/#/vjwplo001", icon: "fa-solid fa-plane-arrival" },
                     { title: "日本旅遊局官方指南", desc: "提供全日本的旅遊攻略與景點介紹", url: "https://www.japan.travel/tw/tw/", icon: "fa-solid fa-map" },
@@ -423,9 +495,13 @@
             homeView.classList.add('hidden');
             phraseView.classList.remove('hidden');
             
-            // 判斷分類類型 (對話列表 或 實用網站連結)
+            // 判斷分類類型
             if (cat.type === 'links') {
                 renderLinks(cat.items);
+            } else if (cat.type === 'exchange') {
+                renderExchange();
+            } else if (cat.type === 'checklist') {
+                renderChecklist(cat.sections);
             } else {
                 renderPhrases(cat.phrases);
             }
@@ -528,8 +604,8 @@
             phraseList.innerHTML = '';
             
             const header = document.createElement('div');
-            header.className = "mb-4 text-xs text-amber-800 px-1 bg-amber-50 p-3.5 rounded-xl border border-amber-200 animate-fade-in font-medium";
-            header.innerHTML = "<p>點擊以下卡片將自動跳轉至相關網站，為您的日本旅行提供幫助（需網路連線）：</p>";
+            header.className = "mb-4 text-xs text-amber-800 px-1 bg-amber-50 p-2.5 rounded-xl border border-amber-200 animate-fade-in font-medium";
+            header.innerHTML = "<p>點擊以下卡片將自動跳轉至相關網站或 App 下載頁面：</p>";
             phraseList.appendChild(header);
 
             items.forEach((item, index) => {
@@ -553,6 +629,141 @@
                     </div>
                 `;
                 phraseList.appendChild(card);
+            });
+        }
+
+        // 渲染匯率換算器
+        function renderExchange() {
+            phraseList.innerHTML = '';
+            
+            const container = document.createElement('div');
+            container.className = "bg-white rounded-xl shadow-sm border border-gray-200 p-5 animate-fade-in mt-2";
+            container.innerHTML = `
+                <h3 class="font-bold text-gray-800 mb-5 text-center text-lg"><i class="fa-solid fa-yen-sign text-yellow-500 mr-2"></i> JPY ↔ HKD 換算</h3>
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">日圓金額 (JPY)</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 font-bold text-lg">¥</span>
+                        <input type="number" id="jpyInput" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-9 pr-4 text-xl font-bold text-gray-800 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all shadow-inner" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-4 text-gray-300 text-lg">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 ml-1">大約港幣 (HKD)</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-blue-400 font-bold text-lg">HK$</span>
+                        <input type="number" id="hkdOutput" class="w-full bg-blue-50 border border-blue-200 rounded-xl py-3.5 pl-12 pr-4 text-2xl font-bold text-blue-700 shadow-inner" readonly placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span class="text-xs text-gray-500 font-medium">自訂參考匯率 (1 JPY = ? HKD)</span>
+                    <input type="number" id="rateInput" value="0.052" step="0.001" class="w-20 text-center bg-white border border-gray-200 rounded-md p-1.5 text-sm font-mono text-gray-700 shadow-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <p class="text-[0.6rem] text-gray-400 mt-2 text-center">提示：預設匯率僅供參考，請依您換匯或刷卡的實際匯率手動調整以求精準。</p>
+            `;
+            
+            phraseList.appendChild(container);
+
+            // 綁定計算邏輯
+            const jpyInput = document.getElementById('jpyInput');
+            const hkdOutput = document.getElementById('hkdOutput');
+            const rateInput = document.getElementById('rateInput');
+
+            const calculate = () => {
+                const jpy = parseFloat(jpyInput.value) || 0;
+                const rate = parseFloat(rateInput.value) || 0.052; // 預設使用 0.052
+                hkdOutput.value = (jpy * rate).toFixed(2);
+            };
+
+            jpyInput.addEventListener('input', calculate);
+            rateInput.addEventListener('input', calculate);
+        }
+
+        // 渲染檢查清單
+        function renderChecklist(sections) {
+            phraseList.innerHTML = '';
+            
+            // 讀取本地儲存的打勾狀態 (確保離開頁面後紀錄還在)
+            const savedState = JSON.parse(localStorage.getItem('japanTravelChecklist') || '{}');
+
+            const header = document.createElement('div');
+            header.className = "mb-4 text-xs text-slate-700 px-1 bg-slate-100 p-3 rounded-xl border border-slate-200 animate-fade-in font-medium flex items-center justify-between shadow-sm mt-2";
+            header.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa-solid fa-clipboard-check text-slate-500 mr-2 text-sm"></i>
+                    <span>出發前終極檢查清單 (自動存檔)</span>
+                </div>
+                <button id="resetChecklist" class="text-[0.6rem] bg-white border border-slate-300 px-2 py-1 rounded shadow-sm active-scale text-slate-500 hover:bg-slate-50 transition-colors">全部重設</button>
+            `;
+            phraseList.appendChild(header);
+
+            const listContainer = document.createElement('div');
+            listContainer.className = "space-y-4 pb-4";
+
+            sections.forEach((section, sIndex) => {
+                const secDiv = document.createElement('div');
+                secDiv.className = "bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in";
+                secDiv.style.animationDelay = `${sIndex * 0.08}s`;
+                
+                let itemsHtml = '';
+                section.items.forEach((item, iIndex) => {
+                    const uniqueId = `check_${sIndex}_${iIndex}`;
+                    const isChecked = savedState[uniqueId] ? 'checked' : '';
+                    const textClass = isChecked ? 'line-through text-gray-400' : 'text-gray-700';
+                    
+                    itemsHtml += `
+                        <label class="flex items-start gap-3 p-3.5 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="checkbox" id="${uniqueId}" ${isChecked} class="mt-0.5 w-5 h-5 rounded border-gray-300 accent-blue-500 transition-all checklist-cb flex-shrink-0 cursor-pointer">
+                            <span class="text-sm font-medium ${textClass} transition-all duration-200 select-none flex-1 leading-relaxed" id="text_${uniqueId}">${item}</span>
+                        </label>
+                    `;
+                });
+
+                secDiv.innerHTML = `
+                    <div class="bg-slate-50 p-2.5 border-b border-gray-200 flex items-center gap-2">
+                        <i class="${section.icon} text-slate-600 ml-1"></i>
+                        <h3 class="font-bold text-slate-800 text-[0.8rem]">${section.title}</h3>
+                    </div>
+                    <div class="flex flex-col">
+                        ${itemsHtml}
+                    </div>
+                `;
+                listContainer.appendChild(secDiv);
+            });
+            
+            phraseList.appendChild(listContainer);
+
+            // 綁定打勾事件
+            const checkboxes = document.querySelectorAll('.checklist-cb');
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const id = e.target.id;
+                    const textSpan = document.getElementById('text_' + id);
+                    
+                    if (e.target.checked) {
+                        textSpan.classList.add('line-through', 'text-gray-400');
+                        textSpan.classList.remove('text-gray-700');
+                        savedState[id] = true;
+                    } else {
+                        textSpan.classList.remove('line-through', 'text-gray-400');
+                        textSpan.classList.add('text-gray-700');
+                        savedState[id] = false;
+                    }
+                    // 存入瀏覽器 LocalStorage
+                    localStorage.setItem('japanTravelChecklist', JSON.stringify(savedState));
+                });
+            });
+
+            // 綁定重設按鈕
+            document.getElementById('resetChecklist').addEventListener('click', () => {
+                localStorage.removeItem('japanTravelChecklist');
+                renderChecklist(sections); // 重新渲染畫面以清空所有勾選
             });
         }
 
